@@ -396,14 +396,15 @@
             }
 
             .logo {
-                position: static;        /* Убирает привязку к верхнему углу */
-                display: block;
-                margin: 80px auto 10px;  /* Опускает логотип ниже меню */
+                position: absolute; /* сохраняем привязку к странице */
+                top: 80px;          /* опускаем логотип ниже меню */
+                left: 50%;
+                transform: translateX(-50%); /* выравнивание по центру */
                 width: 80px;
-                height: auto;
+                height: 80px;
+                padding: 5px;
                 background: none;
-                padding: 0;
-                text-align: center;
+                z-index: 10;
             }
             
             .logo img {
