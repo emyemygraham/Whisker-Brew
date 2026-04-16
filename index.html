@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whisker Brew - Кафе</title>
+    <style>
+        * {
+            margin: 10;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f7eddd;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Меню */
+        .header-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .menu {
+            font-family: 'Georgia', serif;
+        }
+
+        .menu ul {
+            list-style: none;
+            display: flex;
+            gap: 5px;
+        }
+
+        .menu ul li {
+            position: relative;
+        }
+
+        .menu ul li a {
+            display: block;
+            text-decoration: none;
+            color: #2c1810;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #d9b99b;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .menu ul li a:hover {
+            background-color: #8b4513;
+            color: white;
+        }
+
+        /* Выпадающее меню */
+        .menu ul li ul {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            min-width: 180px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #d9b99b;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+
+        .menu ul li:hover ul {
+            display: flex;
+        }
+
+        .menu ul li ul li a {
+            border: none;
+            border-bottom: 1px solid #eee;
+            border-radius: 0;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .menu ul li ul li:last-child a {
+            border-bottom: none;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .menu ul li ul li:first-child a {
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 200px;
+            height: 200px;
+            background-color: #e3e3e3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            z-index: 10;
+        }
+
+        .logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .estd {
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .year {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 7px;
+            color: #2c1810;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 10px;
+            color: #5a4a3a;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        
+        .features {
+            margin-top: 20px;
+            max-width: 900px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #d9b99b;
+        }
+
+        .feature h3 {
+            color: #5a4a3a;
+            margin-bottom: 10px;
+        }
+        
+        .corner-image {
+            position: absolute;
+            bottom: 150px;
+            right: 20px;
+            width: 300px;
+            max-width: 40vw;
+            height: 300px;
+            z-index: 1;
+        }
+
+        .corner-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .header-menu {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .menu ul {
+                flex-direction: column;
+                gap: 3px;
+            }
+            
+            .menu ul li a {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .estd { font-size: 8px; }
+            .year { font-size: 10px; }
+            .name { font-size: 12px; }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .corner-image {
+                width: 200px;
+                height: 150px;
+                bottom: 10px;
+                right: 10px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .corner-image {
+                width: 150px;
+                height: 100px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Меню в правом верхнем углу -->
+    <div class="header-menu">
+        <section class="menu">
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li>
+                    <a href="#">Меню</a>
+                    <ul>
+                        <li><a href="menu/coffee.html">Кофе и напитки</a></li>
+                        <li><a href="coffee_array.html">Конструктор кофе</a></li>
+                        <li><a href="menu/desserts.html">Десерты</a></li>
+                        <li><a href="menu/breakfast.html">Завтраки</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">О нас</a>
+                    <ul>
+                        <li><a href="about/history.html">История</a></li>
+                        <li><a href="about/baristas.html">Наши бариста</a></li>
+                    </ul>
+                </li>
+                <li><a href="LR4.html">Тест о кофе</a></li>
+            </ul>
+        </section>
+    </div>
+    
+    <div class="logo">
+        <img src="images/logo.jpg" alt="Whisker Brew Логотип">
+    </div>
+
+    <div class="main-content">
+        <h1>Whisker Brew</h1>
+        <p class="tagline">Кофе с характером, атмосфера с душой</p>
+        <div class="description">
+            <p>В нашем уютном кафе каждая чашка кофе — это искусство, а каждая встреча — история.</p>
+            <p>Мы тщательно отбираем лучшие сорта кофе, готовим вкуснейшие десерты и создаём атмосферу, в которой хочется оставаться.</p>
+            <p>Приходите к нам за вдохновением, общением и незабываемыми вкусами!</p>
+        </div>
+
+        <section class="features">
+            <h2>Почему выбирают нас?</h2>
+            <div class="feature-grid">
+                <article class="feature">
+                    <h3>Свежие зерна</h3>
+                    <p>Ежедневно обжариваем кофе для идеального вкуса</p>
+                </article>
+                <article class="feature">
+                    <h3>Уютная атмосфера</h3>
+                    <p>Идеальное место для работы и встреч с друзьями</p>
+                </article>
+                <article class="feature">
+                    <h3>Мастер-классы</h3>
+                    <p>Учим готовить кофе как профессиональные бариста</p>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <div class="corner-image">
+        <img src="images/1.jpg" alt="Интерьер кафе">
+    </div>
+</body>
+</html>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор кофе - Whisker Brew</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f7eddd;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .header-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .menu {
+            font-family: 'Georgia', serif;
+        }
+
+        .menu ul {
+            list-style: none;
+            display: flex;
+            gap: 5px;
+        }
+
+        .menu ul li {
+            position: relative;
+        }
+
+        .menu ul li a {
+            display: block;
+            text-decoration: none;
+            color: #2c1810;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #d9b99b;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .menu ul li a:hover {
+            background-color: #8b4513;
+            color: white;
+        }
+
+        .menu ul li ul {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            min-width: 180px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #d9b99b;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+
+        .menu ul li:hover ul {
+            display: flex;
+        }
+
+        .menu ul li ul li a {
+            border: none;
+            border-bottom: 1px solid #eee;
+            border-radius: 0;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .menu ul li ul li:last-child a {
+            border-bottom: none;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .menu ul li ul li:first-child a {
+            border-radius: 6px 6px 0 0;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 200px;
+            height: 200px;
+            background-color: #e3e3e3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            z-index: 10;
+        }
+
+        .logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .builder-container {
+            max-width: 900px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+        }
+
+        .builder-title {
+            text-align: center;
+            color: #2c1810;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .coffee-result {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #d9b99b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .coffee-name {
+            font-size: 2.2rem;
+            color: #8b4513;
+            margin-bottom: 15px;
+            font-weight: bold;
+            min-height: 60px;
+        }
+
+        .coffee-details {
+            font-size: 1.1rem;
+            color: #5a4a3a;
+            line-height: 1.6;
+        }
+
+        .builder-section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid #d9b99b;
+        }
+
+        .section-title {
+            color: #5a4a3a;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #f0e6d6;
+            padding-bottom: 10px;
+        }
+
+        .slider-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .slider-container {
+            padding: 20px;
+            background: #f9f5f0;
+            border-radius: 8px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #5a4a3a;
+        }
+
+        .slider-value {
+            font-weight: bold;
+            color: #8b4513;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #d9b99b;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #8b4513;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .option-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f9f5f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .option-item:hover {
+            background: #f0e6d6;
+        }
+
+        .option-item.selected {
+            border-color: #8b4513;
+            background: #f9f5f0;
+        }
+
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            background-color: #8b4513;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            min-width: 150px;
+        }
+
+        .action-button:hover {
+            background-color: #6b330c;
+        }
+
+        .action-button.reset {
+            background-color: #5a4a3a;
+        }
+
+        @media (max-width: 768px) {
+            .header-menu {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .menu ul {
+                flex-direction: column;
+                gap: 3px;
+            }
+            
+            .menu ul li a {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+                top: 10px;
+                left: 10px;
+            }
+
+            .builder-container {
+                margin-top: 140px;
+            }
+
+            .builder-title {
+                font-size: 2rem;
+            }
+
+            .coffee-name {
+                font-size: 1.8rem;
+            }
+
+            .slider-group {
+                grid-template-columns: 1fr;
+            }
+
+            .option-group {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .coffee-name {
+                font-size: 1.5rem;
+            }
+
+            .builder-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-menu">
+        <section class="menu">
+            <ul>
+                <li><a href="000.html">Главная</a></li>
+                <li>
+                    <a href="#">Меню</a>
+                    <ul>
+                        <li><a href="menu/coffee.html">Кофе и напитки</a></li>
+                        <li><a href="coffee_array.html">Конструктор кофе</a></li>
+                        <li><a href="menu/desserts.html">Десерты</a></li>
+                        <li><a href="menu/breakfast.html">Завтраки</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">О нас</a>
+                    <ul>
+                        <li><a href="about/history.html">История</a></li>
+                        <li><a href="about/baristas.html">Наши бариста</a></li>
+                    </ul>
+                </li>
+                <li><a href="LR4.html">Тест о кофе</a></li>
+                
+            </ul>
+        </section>
+    </div>
+
+    <div class="logo">
+        <img src="images/logo.jpg" alt="Whisker Brew Логотип">
+    </div>
+
+    <div class="builder-container">
+        <h1 class="builder-title">Конструктор кофе</h1>
+
+        <div class="coffee-result">
+            <div class="coffee-name" id="coffeeName">Настройте ваш напиток</div>
+            <div class="coffee-details" id="coffeeDetails">Измените параметры ниже</div>
+        </div>
+
+        <div class="builder-section">
+            <h2 class="section-title">Объемы</h2>
+            <div class="slider-group">
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Объем кофе</span>
+                        <span class="slider-value" id="coffeeValue">60 мл</span>
+                    </div>
+                    <input type="range" id="coffeeSlider" min="25" max="150" step="5" value="60">
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #5a4a3a;">
+                        <span>25 мл</span>
+                        <span>90 мл</span>
+                        <span>150 мл</span>
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Объем молока</span>
+                        <span class="slider-value" id="milkValue">150 мл</span>
+                    </div>
+                    <input type="range" id="milkSlider" min="0" max="400" step="10" value="150">
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #5a4a3a;">
+                        <span>0 мл</span>
+                        <span>200 мл</span>
+                        <span>400 мл</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="builder-section">
+            <h2 class="section-title">Тип молока</h2>
+            <div class="option-group" id="milkTypeGroup">
+                <label class="option-item selected">
+                    <input type="radio" name="milkType" value="regular" checked>
+                    <span>Обычное молоко</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="milkType" value="skim">
+                    <span>Обезжиренное молоко</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="milkType" value="soy">
+                    <span>Соевое молоко</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="milkType" value="almond">
+                    <span>Миндальное молоко</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="milkType" value="coconut">
+                    <span>Кокосовое молоко</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="builder-section">
+            <h2 class="section-title">Сиропы</h2>
+            <div class="option-group" id="syrupGroup">
+                <label class="option-item">
+                    <input type="checkbox" name="syrup" value="vanilla">
+                    <span>Ванильный</span>
+                </label>
+                <label class="option-item">
+                    <input type="checkbox" name="syrup" value="caramel">
+                    <span>Карамельный</span>
+                </label>
+                <label class="option-item">
+                    <input type="checkbox" name="syrup" value="chocolate">
+                    <span>Шоколадный</span>
+                </label>
+                <label class="option-item">
+                    <input type="checkbox" name="syrup" value="coconut">
+                    <span>Кокосовый</span>
+                </label>
+                <label class="option-item">
+                    <input type="checkbox" name="syrup" value="nut">
+                    <span>Ореховый</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="builder-section">
+            <h2 class="section-title">Сахар</h2>
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Количество сахара</span>
+                    <span class="slider-value" id="sugarValue">0 г (0 пак.)</span>
+                </div>
+                <input type="range" id="sugarSlider" min="0" max="40" step="5" value="0">
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9rem; color: #5a4a3a;">
+                    <span>0 г</span>
+                    <span>20 г (4 пак.)</span>
+                    <span>40 г (8 пак.)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="builder-section">
+            <h2 class="section-title">Дополнительно</h2>
+            <div class="option-group" id="extraGroup">
+                <label class="option-item">
+                    <input type="checkbox" name="extra" value="cinnamon">
+                    <span>Корица</span>
+                </label>
+                <label class="option-item">
+                    <input type="checkbox" name="extra" value="nutmeg">
+                    <span>Мускатный орех</span>
+                </label>
+                <label class="option-item">
+                    <input type="checkbox" name="extra" value="cream">
+                    <span>Взбитые сливки</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-button" onclick="analyzeCoffee()">Определить напиток</button>
+            <button class="action-button reset" onclick="resetToDefault()">Сбросить</button>
+        </div>
+    </div>
+
+    <script>
+        // бд
+        const coffeeTypes = {
+            espresso: { minCoffee: 25, maxCoffee: 35, minMilk: 0, maxMilk: 0, name: "Эспрессо" },
+            doppio: { minCoffee: 50, maxCoffee: 70, minMilk: 0, maxMilk: 0, name: "Доппио" },
+            americano: { minCoffee: 50, maxCoffee: 150, minMilk: 0, maxMilk: 0, name: "Американо" },
+            macchiato: { minCoffee: 25, maxCoffee: 35, minMilk: 10, maxMilk: 20, name: "Макиато" },
+            cappuccino: { minCoffee: 25, maxCoffee: 35, minMilk: 100, maxMilk: 150, ratio: 1.3, name: "Капучино" },
+            flatwhite: { minCoffee: 25, maxCoffee: 35, minMilk: 100, maxMilk: 120, ratio: 3.5, name: "Флэт уайт" },
+            latte: { minCoffee: 25, maxCoffee: 35, minMilk: 200, maxMilk: 300, ratio: 6, name: "Латте" },
+            mokko: { minCoffee: 30, maxCoffee: 60, minMilk: 150, maxMilk: 250, withChocolate: true, name: "Мокко" }
+        };
+
+        const milkTypes = {
+            regular: "обычное молоко",
+            skim: "обезжиренное молоко", 
+            soy: "соевое молоко",
+            almond: "миндальное молоко",
+            coconut: "кокосовое молоко"
+        };
+
+        const syrups = {
+            vanilla: "ванильный",
+            caramel: "карамельный",
+            chocolate: "шоколадный", 
+            coconut: "кокосовый",
+            nut: "ореховый"
+        };
+
+        const extras = {
+            cinnamon: "корица",
+            nutmeg: "мускатный орех",
+            cream: "взбитые сливки"
+        };
+
+        // инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            updateSliderValue('coffeeSlider', 'coffeeValue', ' мл');
+            updateSliderValue('milkSlider', 'milkValue', ' мл');
+            updateSliderValue('sugarSlider', 'sugarValue', ' г');
+            
+            // обработчики слайдеров
+            document.getElementById('coffeeSlider').addEventListener('input', function() {
+                updateSliderValue('coffeeSlider', 'coffeeValue', ' мл');
+            });
+            
+            document.getElementById('milkSlider').addEventListener('input', function() {
+                updateSliderValue('milkSlider', 'milkValue', ' мл');
+            });
+            
+            document.getElementById('sugarSlider').addEventListener('input', function() {
+                updateSugarValue();
+            });
+            
+            // обработчики для опций
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const input = this.querySelector('input');
+                    if (input.type === 'radio') {
+                        document.querySelectorAll(`input[name="${input.name}"]`).forEach(radio => {
+                            radio.closest('.option-item').classList.remove('selected');
+                        });
+                    }
+                    this.classList.toggle('selected', input.checked);
+                });
+            });
+            
+            analyzeCoffee();
+        });
+
+        // обновление знач слайдера
+        function updateSliderValue(sliderId, valueId, suffix) {
+            const slider = document.getElementById(sliderId);
+            const valueDisplay = document.getElementById(valueId);
+            valueDisplay.textContent = slider.value + suffix;
+        }
+
+        // сахара
+        function updateSugarValue() {
+            const slider = document.getElementById('sugarSlider');
+            const valueDisplay = document.getElementById('sugarValue');
+            const sugar = parseInt(slider.value);
+            const packets = sugar / 5;
+            valueDisplay.textContent = `${sugar} г (${packets} ${getSugarWord(packets)})`;
+        }
+
+        // определение напитка
+        function analyzeCoffee() {
+            const coffeeName = document.getElementById('coffeeName');
+            const coffeeDetails = document.getElementById('coffeeDetails');
+            
+            // получение значений
+            const coffeeVolume = parseInt(document.getElementById('coffeeSlider').value);
+            const milkVolume = parseInt(document.getElementById('milkSlider').value);
+            const milkType = document.querySelector('input[name="milkType"]:checked').value;
+            const sugar = parseInt(document.getElementById('sugarSlider').value);
+            
+            const selectedSyrups = Array.from(document.querySelectorAll('input[name="syrup"]:checked'))
+                .map(input => input.value);
+            
+            const selectedExtras = Array.from(document.querySelectorAll('input[name="extra"]:checked'))
+                .map(input => input.value);
+            
+            // проверка на шоколад для мокко
+            const hasChocolate = selectedSyrups.includes('chocolate');
+            
+            // определение типа напитка
+            let detectedType = 'custom';
+            let typeName = 'Особый напиток';
+            
+            for (const [type, rules] of Object.entries(coffeeTypes)) {
+                if (coffeeVolume >= rules.minCoffee && coffeeVolume <= rules.maxCoffee) {
+                    if (milkVolume >= rules.minMilk && milkVolume <= rules.maxMilk) {
+                        // доп проверка для кофе с молоком
+                        if (rules.ratio) {
+                            const ratio = milkVolume / coffeeVolume;
+                            if (ratio >= (rules.ratio - 1) && ratio <= (rules.ratio + 2)) {
+                                detectedType = type;
+                                typeName = rules.name;
+                                break;
+                            }
+                        } else if (rules.withChocolate) {
+                            if (hasChocolate) {
+                                detectedType = type;
+                                typeName = rules.name;
+                                break;
+                            }
+                        } else {
+                            detectedType = type;
+                            typeName = rules.name;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // если не определ - создание описания по объемам
+            if (detectedType === 'custom') {
+                if (coffeeVolume <= 35 && milkVolume === 0) {
+                    typeName = "Крепкий кофе";
+                } else if (coffeeVolume > 35 && coffeeVolume <= 70 && milkVolume === 0) {
+                    typeName = "Двойной кофе";
+                } else if (coffeeVolume > 70 && milkVolume === 0) {
+                    typeName = "Большой черный кофе";
+                } else if (milkVolume > 0) {
+                    const ratio = milkVolume / coffeeVolume;
+                    if (ratio < 1) {
+                        typeName = "Кофе с небольшим количеством молока";
+                    } else if (ratio < 3) {
+                        typeName = "Кофе с молоком";
+                    } else if (ratio < 6) {
+                        typeName = "Молочный кофе";
+                    } else {
+                        typeName = "Очень молочный напиток";
+                    }
+                }
+            }
+            
+            // формирование названия напитка
+            let milkName = milkType === 'regular' ? '' : ` на ${milkTypes[milkType]}`;
+            
+            let syrupPart = '';
+            if (selectedSyrups.length > 0) {
+                const syrupNames = selectedSyrups.map(syrup => syrups[syrup]);
+                syrupPart = ` ${joinWords(syrupNames, '-')}`;
+            }
+            
+            let extraPart = '';
+            if (selectedExtras.length > 0) {
+                const extraNames = selectedExtras.map(extra => extras[extra]);
+                extraPart = ` с ${joinWords(extraNames, ' и ')}`;
+            }
+            
+            let sugarPart = '';
+            if (sugar > 0) {
+                sugarPart = ` с ${sugar} г сахара`;
+            }
+            
+            // формирование полного названия
+            let fullName = syrupPart + ' ' + typeName + milkName + extraPart + sugarPart;
+            fullName = fullName.replace(/\s+/g, ' ').trim();
+            
+            coffeeName.textContent = fullName;
+            
+            // формирование деталей
+            let details = [
+                `Кофе: ${coffeeVolume} мл`,
+                milkVolume > 0 ? `Молоко: ${milkVolume} мл (${milkTypes[milkType]})` : null,
+                sugar > 0 ? `Сахар: ${sugar} г` : null
+            ].filter(Boolean);
+            
+            if (selectedSyrups.length > 0) {
+                details.push(`Сиропы: ${selectedSyrups.map(s => syrups[s]).join(', ')}`);
+            }
+            
+            if (selectedExtras.length > 0) {
+                details.push(`Добавки: ${selectedExtras.map(e => extras[e]).join(', ')}`);
+            }
+            
+            coffeeDetails.innerHTML = details.join(' • ');
+            
+
+
+            
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+
+
+        }
+
+        function joinWords(words, separator) {
+            return words.join(separator);
+        }
+
+        function getSugarWord(packets) {
+            if (packets === 1) return 'пак.';
+            return 'пак.';
+        }
+
+        // сброс
+        function resetToDefault() {
+            document.getElementById('coffeeSlider').value = 60;
+            document.getElementById('milkSlider').value = 150;
+            document.getElementById('sugarSlider').value = 0;
+            
+            document.querySelector('input[name="milkType"][value="regular"]').checked = true;
+            
+            document.querySelectorAll('input[name="syrup"], input[name="extra"]').forEach(input => {
+                input.checked = false;
+            });
+            
+            
+            updateSliderValue('coffeeSlider', 'coffeeValue', ' мл');
+            updateSliderValue('milkSlider', 'milkValue', ' мл');
+            updateSugarValue();
+            
+            
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            document.querySelector('input[name="milkType"][value="regular"]').closest('.option-item').classList.add('selected');
+            
+            
+            analyzeCoffee();
+            
+            
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
