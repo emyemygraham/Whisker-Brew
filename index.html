@@ -215,51 +215,66 @@
         }
         
         @media (max-width: 768px) {
+            /* Меню */
             .header-menu {
-                top: 10px;
-                right: 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                background-color: rgba(247, 237, 221, 0.95);
+                display: flex;
+                justify-content: center;
+                padding: 5px 0;
+                z-index: 1000;
             }
-            
+        
             .menu ul {
-                flex-direction: column;
-                gap: 3px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 5px;
             }
-            
+        
             .menu ul li a {
-                padding: 8px 12px;
-                font-size: 12px;
+                padding: 6px 10px;
+                font-size: 11px;
             }
-            
+        
+            /* Отступ сверху, чтобы текст не перекрывался меню */
+            .main-content,
+            .builder-container,
+            .test-container {
+                margin-top: 80px;
+            }
+        
+            /* Логотип */
             .logo {
-                width: 80px;
-                height: 80px;
-                top: 10px;
-                left: 10px;
+                position: static;
+                width: 70px;
+                height: 70px;
+                margin: 70px auto 10px;
             }
-            
-            .estd { font-size: 8px; }
-            .year { font-size: 10px; }
-            .name { font-size: 12px; }
-            
+        
+            .logo img {
+                width: 100%;
+                height: auto;
+            }
+        
+            /* Текст */
             h1 {
                 font-size: 2rem;
             }
-            
+        
             .tagline {
                 font-size: 1.2rem;
             }
-            
+        
             .description {
                 font-size: 1rem;
             }
-            
-            .corner-image {
-                width: 200px;
-                height: 150px;
-                bottom: 10px;
-                right: 10px;
-            }
-
+        
             .feature-grid {
                 grid-template-columns: 1fr;
             }
