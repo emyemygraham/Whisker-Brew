@@ -301,10 +301,20 @@
                 font-size: 11px;
             }
             .logo {
+                position: absolute; /* сохраняем привязку к странице */
+                top: 80px;          /* опускаем логотип ниже меню */
+                left: 50%;
+                transform: translateX(-50%); /* выравнивание по центру */
                 width: 80px;
                 height: 80px;
-                top: 10px;
-                left: 10px;
+                padding: 5px;
+                background: none;
+                z-index: 10;
+            }
+            
+            .logo img {
+                width: 100%;
+                height: auto;
             }
 
             .builder-container {
