@@ -196,14 +196,14 @@
             margin-bottom: 10px;
         }
         
-        .corner-image {
-            position: absolute;
-            bottom: 150px;
-            right: 20px;
-            width: 300px;
-            max-width: 40vw;
-            height: 300px;
-            z-index: 1;
+           .corner-image {
+        position: static;
+        width: 100%;
+        max-width: 900px;
+        height: auto;
+        margin: 40px auto;
+        display: flex;
+        justify-content: center;
         }
 
         .corner-image img {
@@ -240,13 +240,6 @@
             .menu ul li a {
                 padding: 6px 10px;
                 font-size: 11px;
-            }
-        
-            /* Отступ сверху, чтобы текст не перекрывался меню */
-            .main-content,
-            .builder-container,
-            .test-container {
-                margin-top: 80px;
             }
         
             /* Логотип */
