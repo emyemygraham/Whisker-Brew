@@ -247,15 +247,17 @@
             }
         
             /* Логотип */
-            .logo {
-                position: static;
-                width: 70px;
+           .logo {
+                position: static;      /* Убирает привязку к верхнему углу */
+                display: block;
+                margin: 70px auto 10px; /* Опускает логотип ниже */
+                width: 80px;
                 height: auto;
-                margin: 10px auto;
                 background: none;
                 padding: 0;
+                text-align: center;
             }
-        
+
             .logo img {
                 width: 100%;
                 height: auto;
