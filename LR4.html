@@ -396,10 +396,19 @@
             }
 
             .logo {
+                position: static;        /* Убирает привязку к верхнему углу */
+                display: block;
+                margin: 80px auto 10px;  /* Опускает логотип ниже меню */
                 width: 80px;
-                height: 80px;
-                top: 10px;
-                left: 10px;
+                height: auto;
+                background: none;
+                padding: 0;
+                text-align: center;
+            }
+            
+            .logo img {
+                width: 100%;
+                height: auto;
             }
 
             .test-container {
